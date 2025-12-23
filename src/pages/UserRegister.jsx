@@ -5,17 +5,31 @@ const UserSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [LastName, setLastName] = useState("")
-  const [userData, setUserData] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userData, setUserData] = useState({});
 
   const submitHandler = (e) => {
     e.preventDefault();
+
+    setUserData({
+      fullName: {
+        firstName: firstName,
+        lastName: lastName,
+      },
+      email: email,
+      password: password,
+    });
+
+    setEmail("");
+    setPassword("");
+    setFirstName("");
+    setLastName("");
   };
   return (
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>
         <img className="w-16 mb-6" src="/uber-logo.png" alt="logo" />
-        <form onClick={(e) => submitHandler(e)}>
+        <form onSubmit={(e) => submitHandler(e)}>
           <h3 className="text-base font-medium mb-2">What's Your Name</h3>
           <div className="flex gap-4">
             <input
@@ -23,16 +37,16 @@ const UserSignup = () => {
               placeholder="First name"
               value={firstName}
               onChange={(e) => {
-                setFirstName(e.target.value)
+                setFirstName(e.target.value);
               }}
               className="bg-[#eeeeee] rounded border px-4 py-2 mb-6 w-1/2 text-base placeholder:text-sm"
             />
             <input
               type="text"
               placeholder="Last name"
-              value={LastName}
+              value={lastName}
               onChange={(e) => {
-                setLastName(e.target.value)
+                setLastName(e.target.value);
               }}
               className="bg-[#eeeeee] rounded border px-4 py-2 mb-6 w-1/2 text-base placeholder:text-sm"
             />
