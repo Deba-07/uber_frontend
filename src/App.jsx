@@ -4,6 +4,7 @@ import UserLogin from './pages/UserLogin'
 import UserRegister from './pages/UserRegister'
 import CaptainLogin from './pages/CaptainLogin'
 import CaptainRegister from './pages/CaptainRegister'
+import Start from './pages/Start'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path='/signup' element={<UserRegister />} />
         <Route path='/captain-login' element={<CaptainLogin />} />
         <Route path='/captain-signup' element={<CaptainRegister />} />
+        <Route path='/home' element={<Start />} />
       </Routes>
     </div>
   )
