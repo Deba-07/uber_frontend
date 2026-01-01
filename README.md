@@ -1,16 +1,58 @@
-# React + Vite
+# Uber Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for the sample Uber-like application. It's a Vite + React app located in the `uber_frontend` folder.
 
-Currently, two official plugins are available:
+## Prerequisites
+- Node.js 16+ or later
+- npm (or yarn)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup
+1. Install dependencies:
 
-## React Compiler
+```bash
+npm install
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+2. Create a local environment file (optional) to point the frontend to your backend. Example `.env` or `.env.local`:
 
-## Expanding the ESLint configuration
+```
+VITE_API_URL=http://localhost:5000
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Development
+Start the development server (Vite):
+
+```bash
+npm run dev
+```
+
+Open http://localhost:5173 (or the port Vite shows) in your browser.
+
+## Build
+Create a production build:
+
+```bash
+npm run build
+```
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
+## Useful scripts
+- `npm run dev` — start dev server
+- `npm run build` — build for production
+- `npm run preview` — preview production build
+
+## Project structure (key files)
+- `src/main.jsx` — app entry
+- `src/pages` — page components (Home, Login, Register, Captain pages)
+
+## Notes
+- Environment variables for the client must start with `VITE_` to be exposed to the browser.
+- If your backend runs on a different port, set `VITE_API_URL` accordingly.
+
+If you'd like, I can also add a short contribution guide or include exact `package.json` scripts here.
+
