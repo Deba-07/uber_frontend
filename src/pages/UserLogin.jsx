@@ -8,8 +8,8 @@ const UserLogin = () => {
   const [password, setPassword] = useState("");
   const [userData, setUserData] = useState("");
 
-  const [user, setUser] = useContext(UserDataContext)
-  const navigate = useNavigate()
+  const [user, setUser] = useContext(UserDataContext);
+  const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -19,14 +19,24 @@ const UserLogin = () => {
       password: password,
     });
     // console.log(userData);
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
-    if(response.status === 200){
-      const data = response.data
-      setUser(data.user)
-      localStorage.setItem("token", data.token)
-      navigate('/home')
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/login`,
+        {
+          email: email.trim(),
+          password: password.trim(),
+        }
+      );
+      if (response.status === 200) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem("token", data.token);
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error(error);
     }
-    
+
     setEmail("");
     setPassword("");
   };
@@ -34,7 +44,7 @@ const UserLogin = () => {
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>
         <img className="w-16 mb-6" src="/uber-logo.png" alt="logo" />
-        <form onClick={(e) => submitHandler(e)}>
+        <form onSubmit={(e) => submitHandler(e)}>
           <h3 className="text-lg font-medium mb-2">What's Your Email</h3>
           <input
             type="email"
@@ -69,7 +79,10 @@ const UserLogin = () => {
         </p>
       </div>
       <div>
-        <Link to='/captain-login' className="bg-[#10b461] flex items-center justify-center text-white font-semibold rounded border px-4 py-2 mb-5 w-full text-lg placeholder:text-sm">
+        <Link
+          to="/captain-login"
+          className="bg-[#10b461] flex items-center justify-center text-white font-semibold rounded border px-4 py-2 mb-5 w-full text-lg placeholder:text-sm"
+        >
           Sign in as Captain
         </Link>
       </div>
