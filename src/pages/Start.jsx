@@ -3,6 +3,10 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import LiveTracking from "../../components/LiveTracking";
 import LocationSearchPanel from "../../components/LocationSearchPanel";
+import VehiclePanel from "../../components/VehiclePanel";
+import ConfirmRide from "../../components/ConfirmRide";
+import LookingForDriver from "../../components/LookingForDriver";
+import WaitingForDriver from "../../components/WaitingForDriver";
 
 const Start = () => {
   const [panelOpen, setpanelOpen] = useState(false);
@@ -12,14 +16,26 @@ const Start = () => {
   const [pickupSuggestions, setPickupSuggestions] = useState([]);
   const [destinationSuggestions, setDestinationSuggestions] = useState([]);
   const [vehiclePanel, setVehiclePanel] = useState(false);
+  const [vehicleType, setvehicleType] = useState(null);
+  const [fare, setFare] = useState({});
+  const [ride, setRide] = useState(null);
+  const [confirmRidePanel, setConfirmRidepanel] = useState(false);
+  const [vehicleFound, setVehicleFound] = useState(false);
+  const [waitingForDriver, setWaitingForDriver] = useState(false);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
+  const vehiclePanelRef = useRef(null);
+  const confirmRidePanelRef = useRef(null);
+  const vehicleFoundRef = useRef(null);
+  const waitingForDriverRef = useRef(null);
 
   const handlePickupChange = (e) => {};
 
   const handleDestinationChange = (e) => {};
 
   async function findTrip() {}
+
+  async function createRide() {}
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -46,6 +62,66 @@ const Start = () => {
       }
     },
     [panelOpen]
+  );
+
+  useGSAP(
+    function () {
+      if (vehiclePanel) {
+        gsap.to(vehiclePanelRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(vehiclePanelRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [vehiclePanel]
+  );
+
+  useGSAP(
+    function () {
+      if (confirmRidePanel) {
+        gsap.to(confirmRidePanelRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(confirmRidePanelRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [confirmRidePanel]
+  );
+
+  useGSAP(
+    function () {
+      if (vehicleFound) {
+        gsap.to(vehicleFoundRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(vehicleFoundRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [vehicleFound]
+  );
+
+  useGSAP(
+    function () {
+      if (waitingForDriver) {
+        gsap.to(waitingForDriverRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(waitingForDriverRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [waitingForDriver]
   );
   return (
     <div className="h-screen relative overflow-hidden">
@@ -121,6 +197,55 @@ const Start = () => {
             activeField={activeField}
           />
         </div>
+      </div>
+      <div
+        ref={vehiclePanelRef}
+        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"
+      >
+        <VehiclePanel
+          selectVehicle={setvehicleType}
+          fare={fare}
+          setConfirmRidepanel={setConfirmRidepanel}
+          setVehiclePanel={setVehiclePanel}
+        />
+      </div>
+      <div
+        ref={confirmRidePanelRef}
+        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"
+      >
+        <ConfirmRide
+          createRide={createRide}
+          pickup={pickup}
+          destination={destination}
+          fare={fare}
+          vehicleType={vehicleType}
+          setConfirmRidepanel={setConfirmRidepanel}
+          setVehicleFound={setVehicleFound}
+        />
+      </div>
+      <div
+        ref={vehicleFoundRef}
+        className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"
+      >
+        <LookingForDriver
+          createRide={createRide}
+          pickup={pickup}
+          destination={destination}
+          fare={fare}
+          vehicleType={vehicleType}
+          setVehicleFound={setVehicleFound}
+        />
+      </div>
+      <div
+        ref={waitingForDriverRef}
+        className="fixed w-full  z-10 bottom-0  bg-white px-3 py-6 pt-12"
+      >
+        <WaitingForDriver
+          ride={ride}
+          setVehicleFound={setVehicleFound}
+          setWaitingForDriver={setWaitingForDriver}
+          waitingForDriver={waitingForDriver}
+        />
       </div>
     </div>
   );
