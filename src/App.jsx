@@ -10,6 +10,7 @@ import UserProtectWrapper from "./pages/UserProtectWrapper";
 import UserLogout from "./pages/UserLogout";
 import CaptainProtectWrapper from "./pages/CaptainProtectWrapper";
 import CaptainLogout from "./pages/CaptainLogout";
+import CaptainRiding from "./pages/CaptainRiding";
 
 const App = () => {
   return (
@@ -52,6 +53,7 @@ const App = () => {
             </CaptainProtectWrapper>
           }
         />
+        <Route path="/captain-riding" element={<CaptainRiding />} />
       </Routes>
     </div>
   );
