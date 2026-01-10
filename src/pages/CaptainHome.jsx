@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useGSAP } from "@gsap/react";
 import CaptainDetails from "../../components/CaptainDetails";
 import RidePopUp from "../../components/RidePopUp";
 import ConfirmRidePopUp from "../../components/ConfirmRidePopUp";
+import gsap from "gsap";
 
 const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
@@ -12,6 +14,36 @@ const CaptainHome = () => {
   const confirmRidePopupPanelRef = useRef(null);
 
   async function confirmRide() {}
+
+  useGSAP(
+    function () {
+      if (ridePopupPanel) {
+        gsap.to(ridePopupPanelRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(ridePopupPanelRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [ridePopupPanel]
+  );
+
+  useGSAP(
+    function () {
+      if (confirmRidePopupPanel) {
+        gsap.to(confirmRidePopupPanelRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(confirmRidePopupPanelRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [confirmRidePopupPanel]
+  );
   return (
     <div className="h-screen">
       <div className="fixed p-6 top-0 flex items-center justify-between w-screen">
