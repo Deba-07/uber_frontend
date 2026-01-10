@@ -1,8 +1,7 @@
 import React from "react";
 
 const FinishRide = () => {
-    
-    async function endRide() {}
+  async function endRide() {}
   return (
     <div>
       <h5
