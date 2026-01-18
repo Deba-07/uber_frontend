@@ -1,15 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import LiveTracking from "../../components/LiveTracking";
-import LocationSearchPanel from "../../components/LocationSearchPanel";
-import VehiclePanel from "../../components/VehiclePanel";
-import ConfirmRide from "../../components/ConfirmRide";
-import LookingForDriver from "../../components/LookingForDriver";
-import WaitingForDriver from "../../components/WaitingForDriver";
+import LiveTracking from "../components/LiveTracking";
+import LocationSearchPanel from "../components/LocationSearchPanel";
+import VehiclePanel from "../components/VehiclePanel";
+import ConfirmRide from "../components/ConfirmRide";
+import LookingForDriver from "../components/LookingForDriver";
+import WaitingForDriver from "../components/WaitingForDriver";
+import { useNavigate } from "react-router-dom";
+import { SocketContext } from "../context/SocketContext";
+import { UserDataContext } from "../context/UserContext";
+import axios from "axios";
 
 const Start = () => {
-  const [panelOpen, setpanelOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [activeField, setActiveField] = useState(null);
@@ -29,13 +33,94 @@ const Start = () => {
   const vehicleFoundRef = useRef(null);
   const waitingForDriverRef = useRef(null);
 
-  const handlePickupChange = (e) => {};
+  const navigate = useNavigate();
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserDataContext);
 
-  const handleDestinationChange = (e) => {};
+  useEffect(() => {
+    socket.emit("join", { userType: "user", userId: user._id });
+  }, [user]);
 
-  async function findTrip() {}
+  socket.on("ride-confirmed", (ride) => {
+    setVehicleFound(false);
+    setWaitingForDriver(true);
+    setRide(ride);
+  });
 
-  async function createRide() {}
+  socket.on("ride-started", (ride) => {
+    console.log("ride");
+    setWaitingForDriver(false);
+    navigate("/riding", { state: { ride } });
+  });
+
+  const handlePickupChange = async (e) => {
+    setPickup(e.target.value);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+        {
+          params: { input: e.target.value },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      setPickupSuggestions(response.data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  const handleDestinationChange = async (e) => {
+    setDestination(e.target.value);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+        {
+          params: { input: e.target.value },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      setDestinationSuggestions(response.data);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  async function findTrip() {
+    setVehiclePanel(true);
+    setPanelOpen(false);
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
+      {
+        params: { pickup, destination },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+    );
+
+    setFare(response.data);
+  }
+
+  async function createRide() {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/rides/create`,
+      {
+        pickup,
+        destination,
+        vehicleType,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+    );
+  }
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -61,7 +146,7 @@ const Start = () => {
         });
       }
     },
-    [panelOpen]
+    [panelOpen],
   );
 
   useGSAP(
@@ -76,7 +161,7 @@ const Start = () => {
         });
       }
     },
-    [vehiclePanel]
+    [vehiclePanel],
   );
 
   useGSAP(
@@ -91,7 +176,7 @@ const Start = () => {
         });
       }
     },
-    [confirmRidePanel]
+    [confirmRidePanel],
   );
 
   useGSAP(
@@ -106,7 +191,7 @@ const Start = () => {
         });
       }
     },
-    [vehicleFound]
+    [vehicleFound],
   );
 
   useGSAP(
@@ -121,7 +206,7 @@ const Start = () => {
         });
       }
     },
-    [waitingForDriver]
+    [waitingForDriver],
   );
   return (
     <div className="h-screen relative overflow-hidden">
