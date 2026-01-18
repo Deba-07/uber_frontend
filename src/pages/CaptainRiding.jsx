@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import FinishRide from "../../components/FinishRide";
-import LiveTracking from "../../components/LiveTracking";
+import FinishRide from "../components/FinishRide";
+import LiveTracking from "../components/LiveTracking";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
